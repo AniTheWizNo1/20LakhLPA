@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Home Control</title>
+    <br>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    align-content: center;
+}
+
+.container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.device {
+    flex-basis: 48%; /* Adjust according to your preference */
+    background-color: blueviolet;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.device img {
+    width: 100px;
+    margin-bottom: 10px;
+}
+
+.device button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.device button:hover {
+    background-color: #2980b9;
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Smart Home Control</h1>
+        <div class="device" id="fan">
+            <img src="C:\Users\KIIT\Desktop\hack\image\fan_icon.jpg" alt="Fan Icon" >
+            <br><br>
+            <button onclick="toggleDevice('fan')">Toggle</button>
+        </div>
+        <div class="device" id="lights">
+            <img src="C:\Users\KIIT\Desktop\hack\image\bulb_icon.jpg" alt="Lights Icon">
+            <button onclick="toggleDevice('lights')">Toggle</button>
+        </div>
+        <div class="device" id="led">
+            <img src="C:\Users\KIIT\Desktop\hack\image\hack.png" alt="LED Icon">
+            <br><input type="color" id="color-picker" value="#ff0000"><br>
+            <button onclick="toggleDevice('led')">Toggle</button>
+        </div>
+        <div class="device" id="ac">
+            <img src="C:\Users\KIIT\Desktop\hack\image\air_icon.jpg" alt="AC Icon">
+            <button onclick="toggleDevice('ac')">Toggle</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script>
+        // Define API URL
+const apiUrl = 'https://kodessphere-api.vercel.app';
+
+// Function to toggle device state
+async function toggleDevice(deviceType) {
+    try {
+        // Send POST request to toggle device state
+        const response = await fetch(`${apiUrl}/${deviceType}/On`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                // Add any authentication headers if required
+            },
+            body: JSON.stringify({}),
+        });
+
+        // Check if the request was successful
+        if (!response.ok) {
+            throw new Error('Failed to toggle device');
+        }
+
+        // Get the device element by ID
+        const deviceElement = document.getElementById(deviceType);
+        
+        // Update the button text based on the response status
+        const button = deviceElement.querySelector('button');
+        button.textContent = response.status === 200 ? 'On' : 'Off';
+        
+        // Change the background color of the device container based on the response status
+        deviceElement.style.backgroundColor = response.status === 200 ? '#00ff00' : '#ff0000';
+    } catch (error) {
+        // Handle errors
+        console.error(error);
+        alert('Error toggling device');
+    }
+}
+
+    </script>
+</body>
+</html>
